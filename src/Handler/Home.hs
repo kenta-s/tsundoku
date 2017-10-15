@@ -24,7 +24,8 @@ data FileForm = FileForm
 -- inclined, or create a single monolithic file.
 getHomeR :: Handler Html
 getHomeR = do
-    (formWidget, formEnctype) <- generateFormPost sampleForm
+    books <- runDB $ selectList [] [Desc BookId]
+    ((result, formWidget), formEnctype) <- runFormPost bookForm
     let submission = Nothing :: Maybe FileForm
         handlerName = "getHomeR" :: Text
     defaultLayout $ do
@@ -35,7 +36,8 @@ getHomeR = do
 
 postHomeR :: Handler Html
 postHomeR = do
-    ((result, formWidget), formEnctype) <- runFormPost sampleForm
+    books <- runDB $ selectList [] [Desc BookId]
+    ((result, formWidget), formEnctype) <- runFormPost bookForm
     let handlerName = "postHomeR" :: Text
         submission = case result of
             FormSuccess res -> Just res
@@ -46,6 +48,26 @@ postHomeR = do
         aDomId <- newIdent
         setTitle "Welcome To Yesod!"
         $(widgetFile "homepage")
+
+data BookForm = BookForm
+    { title :: Text
+    , url :: Text
+    }
+
+bookForm :: Form BookForm
+bookForm = renderBootstrap3 BootstrapBasicForm $ BookForm
+    <$> areq textField (textSettings "title") Nothing
+    <*> areq textField (textSettings "url") Nothing
+    where textSettings name = FieldSettings
+            { fsLabel = "label"
+            , fsTooltip = Nothing
+            , fsId = Nothing
+            , fsName = Just name
+            , fsAttrs =
+                [ ("class", "form-control")
+                , ("placeholder", name)
+                ]
+            }
 
 sampleForm :: Form FileForm
 sampleForm = renderBootstrap3 BootstrapBasicForm $ FileForm

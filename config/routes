@@ -9,5 +9,5 @@
 /comments CommentR POST
 
 /profile ProfileR GET
--- /book/#BookId BookR GET POST DELETE
-/book/#BookId BookR GET
+/book/#BookId BookR GET DELETE
+/books BooksR GET POST
