@@ -22,6 +22,7 @@ postBooksR = do
     case result of
         FormSuccess book -> do
             liftIO $ Prelude.print $ title book
+            runDB $ insert $ Book (title book) (url book)
             redirect HomeR
         _ -> redirect HomeR
 
