@@ -9,14 +9,13 @@ import Import
 
 getBookR :: BookId -> Handler Html
 getBookR bookId = do
-    books <- runDB $ selectList [] [Asc BookTitle]
+    books <- runDB $ selectList [BookId ==. bookId] [LimitTo 1]
     defaultLayout $ do
         [whamlet|
             <h1>This is simple
-            <ul>
-                $forall Entity bookid book <- books
-                    <li>
-                        #{bookTitle book}
+            $forall Entity bookid book <- books
+                <p>#{bookTitle book}
+                <p>#{bookUrl book}
         |]
 
 postBookR :: BookId -> Handler Html
