@@ -12,26 +12,20 @@ import Database.Persist.Sql (ConnectionPool, runSqlPool)
 import Text.Hamlet          (hamletFile)
 import Text.Jasmine         (minifym)
 
--- Used only when in "auth-dummy-login" setting is enabled.
-import Yesod.Auth.Dummy
-
 import Yesod.Auth.OpenId    (authOpenId, IdentifierType (Claimed))
 import Yesod.Default.Util   (addStaticContentExternal)
 import Yesod.Core.Types     (Logger)
 import qualified Yesod.Core.Unsafe as Unsafe
 import qualified Data.CaseInsensitive as CI
 import qualified Data.Text.Encoding as TE
-
--- auth
--- import Yesod.Auth
--- import Yesod.Auth.BrowserId
 import Yesod.Auth.GoogleEmail2
+import System.Environment (getEnv)
 
--- clientId :: Text
--- clientId = ""
--- 
--- clientSecret :: Text
--- clientSecret = ""
+clientId :: Text
+clientId = "set client id"
+
+clientSecret :: Text
+clientSecret = "set client secret"
 
 -- | The foundation datatype for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -228,8 +222,7 @@ instance YesodAuth App where
 
     -- You can add other plugins like Google Email, email or OAuth here
     authPlugins app = [authOpenId Claimed []] ++ extraAuthPlugins
-        -- Enable authDummy login if enabled.
-        where extraAuthPlugins = [authDummy | appAuthDummyLogin $ appSettings app]
+        where extraAuthPlugins = [authGoogleEmail clientId clientSecret]
 
     authHttpManager = getHttpManager
 
