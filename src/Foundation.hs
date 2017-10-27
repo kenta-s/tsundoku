@@ -221,8 +221,7 @@ instance YesodAuth App where
                 }
 
     -- You can add other plugins like Google Email, email or OAuth here
-    authPlugins app = [authOpenId Claimed []] ++ extraAuthPlugins
-        where extraAuthPlugins = [authGoogleEmail clientId clientSecret]
+    authPlugins app = [authGoogleEmail clientId clientSecret]
 
     authHttpManager = getHttpManager
 
