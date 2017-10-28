@@ -21,22 +21,18 @@ import qualified Data.Text.Encoding as TE
 import Yesod.Auth.GoogleEmail2
 import System.Environment (getEnv)
 
-clientId :: Text
-clientId = "set client id"
-
-clientSecret :: Text
-clientSecret = "set client secret"
-
 -- | The foundation datatype for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
 -- starts running, such as database connections. Every handler will have
 -- access to the data present here.
 data App = App
-    { appSettings    :: AppSettings
-    , appStatic      :: Static -- ^ Settings for static file serving.
-    , appConnPool    :: ConnectionPool -- ^ Database connection pool.
-    , appHttpManager :: Manager
-    , appLogger      :: Logger
+    { appSettings       :: AppSettings
+    , appStatic         :: Static -- ^ Settings for static file serving.
+    , appConnPool       :: ConnectionPool -- ^ Database connection pool.
+    , appHttpManager    :: Manager
+    , appLogger         :: Logger
+    , gmailClientId     :: Text
+    , gmailClientSecret :: Text
     }
 
 data MenuItem = MenuItem
@@ -221,7 +217,8 @@ instance YesodAuth App where
                 }
 
     -- You can add other plugins like Google Email, email or OAuth here
-    authPlugins app = [authGoogleEmail clientId clientSecret]
+    -- authPlugins app = [authGoogleEmail clientId clientSecret]
+    authPlugins app = [authGoogleEmail (gmailClientId app) (gmailClientSecret app)]
 
     authHttpManager = getHttpManager
 
