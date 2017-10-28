@@ -21,8 +21,8 @@ postBooksR = do
     ((result, formWidget), formEnctype) <- runFormPost bookForm
     case result of
         FormSuccess book -> do
-            liftIO $ Prelude.print $ title book
-            runDB $ insert $ Book (title book) (url book)
+            uId <- requireAuthId
+            runDB $ insert $ Book uId (title book) (url book)
             redirect HomeR
         _ -> redirect HomeR
 
